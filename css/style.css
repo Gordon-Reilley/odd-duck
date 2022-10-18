@@ -23,7 +23,7 @@ h1 {
 }
 
 header img {
-  width: 150px;
+  width: 200px;
   height: 80px;
   align-content: flex-start;
 }
@@ -74,7 +74,7 @@ section img:hover {
   cursor: pointer;
 }
 
-#results {
+section + div {
   grid-column: 2/5;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   text-align: center;
@@ -86,9 +86,14 @@ section img:hover {
   text-shadow: 1px 1px black;
   margin: auto;
   border: 2px solid transparent;
+  pointer-events: none;
 }
 
-#results:hover {
+section + div.results {
+  pointer-events: auto;
+}
+
+section + div.results:hover {
   border: 2px solid bisque;
   cursor: pointer;
 }
