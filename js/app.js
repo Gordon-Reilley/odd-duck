@@ -7,15 +7,11 @@ let resultsList = document.querySelector('ul');
 let timesUserVoted = 0;
 let maxNumVotes = 25;
 
-// console.log(resultsList);
-// console.log(myContainer);
+let indexArray = [];
 
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
-
-// console.log(image1, image2.src, image3);
-// image2.src = 'img/boots.jpg';
 
 function OddDuck(name, fileExtension = 'jpg') {
   this.name = name;
@@ -47,43 +43,55 @@ let wineGlass = new OddDuck('wine-glass');
 
 let allOddDucks = [sweep, bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, tauntaun, unicorn, waterCan, wineGlass];
 
-// function selectRandomDuck() {
-//   return Math.floor(Math.random() * allOddDucks.length);
-// }
-
-function shuffleDucks(array) {
-  for (let i = array.length -1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i],array[j]] = [array[j], array[i]];
-  }
-  return array.slice(0,3);
+function selectRandomDuck() {
+  return Math.floor(Math.random() * allOddDucks.length);
 }
+
+// function shuffleDucks(array) {
+//   for (let i = array.length -1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [array[i],array[j]] = [array[j], array[i]];
+//   }
+//   return array.slice(0,3);
+// }
 
 // shuffleDucks();
 
 function renderDuck() {
-  // let duck1 = selectRandomDuck();
-  // let duck2 = selectRandomDuck();
-  // let duck3 = selectRandomDuck();
   // console.log(duck1, duck2, duck3);
-
+  // console.log(duckItems);
   // while (duck1 !== duck2 !== duck3) {
   //   duck2 = selectRandomDuck();
   //   duck3 = selectRandomDuck();
-  //   // console.log(duck1, duck2, duck3);
+  // console.log(duck1, duck2, duck3);
   // }
-  const duckItems = shuffleDucks(allOddDucks);
-  console.log(duckItems);
-  image1.src = duckItems[0].src;
-  image1.alt = duckItems[0].name;
-  allOddDucks[0].views++;
-  image2.src = duckItems[1].src;
-  image2.alt = duckItems[1].name;
-  allOddDucks[1].views++;
-  image3.src = duckItems[2].src;
-  image3.alt = duckItems[2].name;
-  allOddDucks[2].views++;
+  // const duckItems = shuffleDucks(allOddDucks);
+
+  while ( indexArray.length < 6) {
+    let ranNum = selectRandomDuck();
+    if (!indexArray.includes(ranNum)) {
+      indexArray.push(ranNum);
+    }
+  }
+
+  let duck1 = indexArray.shift();
+  let duck2 = indexArray.shift();
+  let duck3 = indexArray.shift();
+
+  console.log(indexArray);
+
+  image1.src = allOddDucks[duck1].src;
+  image1.alt = allOddDucks[duck1].name;
+  allOddDucks[duck1].views++;
+  image2.src = allOddDucks[duck2].src;
+  image2.alt = allOddDucks[duck2].name;
+  allOddDucks[duck2].views++;
+  image3.src = allOddDucks[duck3].src;
+  image3.alt = allOddDucks[duck3].name;
+  allOddDucks[duck3].views++;
 }
+
+// console.log();
 
 function renderResults() {
   for (let i = 0; i < allOddDucks.length; i++) {
@@ -111,11 +119,70 @@ function handleClicks(e) {
   if (timesUserVoted === maxNumVotes){
     myContainer.removeEventListener('click',handleClicks);
     resultsButton.className = 'results';
+    resultsButton.addEventListener('click', renderChart);
     resultsButton.addEventListener('click', renderResults);
   } else {
     renderDuck();
   }
 }
+
+function renderChart() {
+
+  let duckNames = [];
+  let duckViews = [];
+  let duckScore = [];
+  for (let i = 0; i < allOddDucks.length; i++) {
+    duckNames.push(allOddDucks[i].name);
+    duckViews.push(allOddDucks[i].views);
+    duckScore.push(allOddDucks[i].score);
+  }
+
+  const data = {
+    labels: duckNames,
+    datasets: [{
+      label: 'Number of Views',
+      data: duckScore,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+      ],
+      borderWidth: 1
+    },
+    {
+      label: 'Number of Votes',
+      data: duckViews,
+      backgroundColor: [
+        'rgba(153, 102, 255, 0.2)',
+      ],
+      borderColor: [
+        'rgb(153, 102, 255)',
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true
+        }
+      }
+    },
+  };
+  const duckChart = new Chart(document.getElementById('duckChart'), config);
+}
+
+
 
 myContainer.addEventListener('click', handleClicks);
 
