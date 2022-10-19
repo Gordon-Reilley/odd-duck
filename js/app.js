@@ -141,7 +141,7 @@ function renderChart() {
     labels: duckNames,
     datasets: [{
       label: 'Number of Views',
-      data: duckScore,
+      data: duckViews,
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
       ],
@@ -152,7 +152,7 @@ function renderChart() {
     },
     {
       label: 'Number of Votes',
-      data: duckViews,
+      data: duckScore,
       backgroundColor: [
         'rgba(153, 102, 255, 0.2)',
       ],
