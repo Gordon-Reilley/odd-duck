@@ -7,6 +7,7 @@ let resultsList = document.querySelector('ul');
 let timesUserVoted = 0;
 let maxNumVotes = 25;
 
+let allOddDucks = [];
 let indexArray = [];
 
 let image1 = document.querySelector('section img:first-child');
@@ -19,53 +20,34 @@ function OddDuck(name, fileExtension = 'jpg') {
   this.src = `img/${this.name}.${fileExtension}`;
   this.score = 0;
   this.views = 0;
+  allOddDucks.push(this);
 }
 
-let sweep = new OddDuck('sweep', 'png');
-let bag = new OddDuck('bag');
-let banana = new OddDuck('banana');
-let bathroom = new OddDuck('bathroom');
-let boots = new OddDuck('boots');
-let breakfast = new OddDuck('breakfast');
-let bubblegum = new OddDuck('bubblegum');
-let chair = new OddDuck('chair');
-let cthulhu = new OddDuck('cthulhu');
-let dogDuck = new OddDuck('dog-duck');
-let dragon = new OddDuck('dragon');
-let pen = new OddDuck('pen');
-let petSweep = new OddDuck('pet-sweep');
-let scissors = new OddDuck('scissors');
-let shark = new OddDuck('shark');
-let tauntaun = new OddDuck('tauntaun');
-let unicorn = new OddDuck('unicorn');
-let waterCan = new OddDuck('water-can');
-let wineGlass = new OddDuck('wine-glass');
-
-let allOddDucks = [sweep, bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, tauntaun, unicorn, waterCan, wineGlass];
+new OddDuck('sweep', 'png');
+new OddDuck('bag');
+new OddDuck('banana');
+new OddDuck('bathroom');
+new OddDuck('boots');
+new OddDuck('breakfast');
+new OddDuck('bubblegum');
+new OddDuck('chair');
+new OddDuck('cthulhu');
+new OddDuck('dog-duck');
+new OddDuck('dragon');
+new OddDuck('pen');
+new OddDuck('pet-sweep');
+new OddDuck('scissors');
+new OddDuck('shark');
+new OddDuck('tauntaun');
+new OddDuck('unicorn');
+new OddDuck('water-can');
+new OddDuck('wine-glass');
 
 function selectRandomDuck() {
   return Math.floor(Math.random() * allOddDucks.length);
 }
 
-// function shuffleDucks(array) {
-//   for (let i = array.length -1; i > 0; i--) {
-//     const j = Math.floor(Math.random() * (i + 1));
-//     [array[i],array[j]] = [array[j], array[i]];
-//   }
-//   return array.slice(0,3);
-// }
-
-// shuffleDucks();
-
 function renderDuck() {
-  // console.log(duck1, duck2, duck3);
-  // console.log(duckItems);
-  // while (duck1 !== duck2 !== duck3) {
-  //   duck2 = selectRandomDuck();
-  //   duck3 = selectRandomDuck();
-  // console.log(duck1, duck2, duck3);
-  // }
-  // const duckItems = shuffleDucks(allOddDucks);
 
   while ( indexArray.length < 6) {
     let ranNum = selectRandomDuck();
@@ -91,13 +73,25 @@ function renderDuck() {
   allOddDucks[duck3].views++;
 }
 
-// console.log();
-
 function renderResults() {
   for (let i = 0; i < allOddDucks.length; i++) {
     let li = document.createElement('li');
     li.textContent = `${allOddDucks[i].name} had ${allOddDucks[i].score} votes, and was seen ${allOddDucks[i].views} times.`;
     resultsList.appendChild(li);
+  }
+}
+
+function storeDuckData() {
+  let stringifiedDuckData = JSON.stringify(allOddDucks);
+  localStorage.setItem('duckData', stringifiedDuckData);
+}
+
+function getDuckData() {
+  let oldDucks = localStorage.getItem('duckData');
+
+  if (oldDucks) {
+    let parsedDucks = JSON.parse(oldDucks);
+    console.log(parsedDucks);
   }
 }
 
@@ -121,6 +115,7 @@ function handleClicks(e) {
     resultsButton.className = 'results';
     resultsButton.addEventListener('click', renderChart);
     resultsButton.addEventListener('click', renderResults);
+    storeDuckData();
   } else {
     renderDuck();
   }
@@ -167,13 +162,13 @@ function renderChart() {
     type: 'bar',
     data: data,
     options: {
-      indexAxis: 'y',
+      // indexAxis: 'y',
       scales: {
         x: {
-          stacked: true
+          // stacked: true
         },
         y: {
-          stacked: true,
+          // stacked: true,
           beginAtZero: true
         }
       }
@@ -182,7 +177,7 @@ function renderChart() {
   const duckChart = new Chart(document.getElementById('duckChart'), config);
 }
 
-
+getDuckData();
 
 myContainer.addEventListener('click', handleClicks);
 
