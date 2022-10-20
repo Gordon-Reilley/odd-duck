@@ -91,6 +91,7 @@ function getDuckData() {
 
   if (oldDucks) {
     let parsedDucks = JSON.parse(oldDucks);
+    allOddDucks = parsedDucks;
     console.log(parsedDucks);
   }
 }
@@ -118,6 +119,7 @@ function handleClicks(e) {
     storeDuckData();
   } else {
     renderDuck();
+    storeDuckData();
   }
 }
 
